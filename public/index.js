@@ -22,4 +22,28 @@ function createNoteElement(note) {
     return tableRow;
 }
 
-console.log(createNoteElement(data[0]));
+function createNoteTable(notes, archived = false) {
+    let fields = ['Name', 'Created', 'Category', 'Content', 'Dates'];
+    // create a <table>
+    let table = document.createElement('table');
+    // create a row for its header part
+    let tableHeaderRow = document.createElement('tr');
+    table.appendChild(tableHeaderRow);
+
+    for (const field of fields) {
+        let tableTH = document.createElement('th');
+        let text = document.createTextNode(field);
+        tableTH.appendChild(text);
+        tableHeaderRow.appendChild(tableTH);
+    }
+    // form its body
+
+    let notesToDisplay = notes.filter(note => note.archived === archived);
+    for (const note of notesToDisplay) {
+        let noteTR = createNoteElement(note);
+        table.appendChild(noteTR);
+    }
+    return table;
+}
+
+document.body.appendChild(createNoteTable(data));
