@@ -11,7 +11,7 @@ export class Note {
         this.description = description;
         // mark the creation time, from the arguments or automatically
         if (creationTime == null)
-            this.creationTime = Date.now();
+            this.creationTime = new Date(Date.now());
         else
             this.creationTime = creationTime;
         // check if is has a valid category

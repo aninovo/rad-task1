@@ -60,15 +60,18 @@ function createNoteButtons(note) {
     return container;
 }
 
-// render functions
-function createNoteElement(note, createNoteButtonsFunction = null) {
+/*
+* NOTES table
+*/
 
+const dateDisplayOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+function createNoteElement(note, createNoteButtonsFunction = null) {
     let fields = {
         Name: note.name,
-        Created: note.creationTime.toLocaleDateString(),
+        Created: note.creationTime.toLocaleDateString('uk', dateDisplayOptions),
         Category: note.category,
         Content: note.description,
-        Dates: note.dates.map(date => date.toLocaleDateString()).join(', '),
+        Dates: note.dates.map(date => date.toLocaleDateString('uk', dateDisplayOptions)).join(', '),
     };
 
     let tableRow = document.createElement('tr');
@@ -89,10 +92,10 @@ function createEditedNoteElement(note) {
 
     let fields = {
         Name: note.name,
-        Created: note.creationTime.toLocaleDateString(),
+        Created: note.creationTime.toLocaleDateString('uk', dateDisplayOptions),
         Category: note.category,
         Content: note.description,
-        Dates: note.dates.map(date => date.toLocaleDateString()).join(', '),
+        Dates: note.dates.map(date => date.toLocaleDateString('uk', dateDisplayOptions)).join(', '),
     };
     // Name editable field
     let name_tableTD = document.createElement('td');
@@ -104,7 +107,7 @@ function createEditedNoteElement(note) {
     tableRow.appendChild(name_tableTD);
     // Created
     let created_tableTD = document.createElement('td');
-    let created_text = document.createTextNode(note.creationTime.toLocaleDateString());
+    let created_text = document.createTextNode(note.creationTime.toLocaleDateString('uk', dateDisplayOptions));
     created_tableTD.appendChild(created_text);
     tableRow.appendChild(created_tableTD);
     // Category editable field TODO select
@@ -139,7 +142,7 @@ function createEditedNoteElement(note) {
     tableRow.appendChild(content_tableTD);
     // dates
     let dates_tableTD = document.createElement('td');
-    let dates_text = document.createTextNode(note.dates.map(date => date.toLocaleDateString()).join(', '));
+    let dates_text = document.createTextNode(note.dates.map(date => date.toLocaleDateString('uk', dateDisplayOptions)).join(', '));
     dates_tableTD.appendChild(dates_text);
     tableRow.appendChild(dates_tableTD);
     // confirm button
@@ -185,12 +188,74 @@ function createNoteTable(notes, archived = false, editedNote = null) {
     return table;
 }
 
-// GUI elements
+/*
+* STATS table
+*/
+function createCategoryStatElement(notes, category) {
+    let fields = {
+        Category: category,
+        Active: notes.filter(note => note.category == category && !note.archived).length.toString(),
+        Archived: notes.filter(note => note.category == category && note.archived).length.toString(),
+    };
 
-let mainTableContainer = document.body;
-function render (editedNote = null) {
+    let tableRow = document.createElement('tr');
+    for (const field in fields) {
+        let tableTD = document.createElement('td');
+        let text = document.createTextNode(fields[field]);
+        tableTD.appendChild(text);
+        tableRow.appendChild(tableTD);
+    }
+
+    return tableRow;
+}
+
+function createStatTable(notes) {
+    let fields = ['Category', 'Active', 'Archived'];
+    // create a <table>
+    let table = document.createElement('table');
+    // create a row for its header part
+    let tableHeaderRow = document.createElement('tr');
+    table.appendChild(tableHeaderRow);
+
+    for (const field of fields) {
+        let tableTH = document.createElement('th');
+        let text = document.createTextNode(field);
+        tableTH.appendChild(text);
+        tableHeaderRow.appendChild(tableTH);
+    }
+    tableHeaderRow.appendChild(createHeaderButtons());
+
+    // form its body
+    let categoriesToDisplay = Note.categories;
+    for (const category of categoriesToDisplay) {
+        let catTD = createCategoryStatElement(notes, category);
+        table.appendChild(catTD);
+    }
+    return table;
+}
+
+// finding GUI elements
+
+let mainTableContainer = document.getElementById('main-table-container');
+let statTableContainer = document.getElementById('stat-table-container');
+let createNoteButton = document.getElementById('new-note-button-container');
+createNoteButton.onclick = function () {
+    let newNote = new Note('', 'Idea', '');
+    notes.push(newNote);
+    viewArchived = false;
+    render(newNote);
+}
+function render(editedNote = null) {
+    // render the table with editable notes
     mainTableContainer.innerHTML = '';
     let table = createNoteTable(notes, viewArchived, editedNote);
     mainTableContainer.appendChild(table);
+
+    // render the table with statistics
+
+    statTableContainer.innerHTML = '';
+    let tableStats = createStatTable(notes);
+    statTableContainer.appendChild(tableStats);
+
 }
 render();

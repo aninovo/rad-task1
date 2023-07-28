@@ -1,0 +1,25 @@
+
+table,
+th,
+td {
+    border: 0;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
+
+table{
+    width: 100%;
+}
+
+
+tr:nth-child(odd) {
+    background-color: #8F9AA5;
+}
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+}
