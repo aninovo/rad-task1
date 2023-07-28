@@ -82,8 +82,12 @@ function createNoteElement(note, createNoteButtonsFunction = null) {
         tableRow.appendChild(tableTD);
     }
 
+
+    let buttonsTD = document.createElement('td');
     if (createNoteButtonsFunction != null) 
-        tableRow.appendChild(createNoteButtonsFunction(note));
+        buttonsTD.appendChild(createNoteButtonsFunction(note));
+
+    tableRow.appendChild(buttonsTD);
     return tableRow;
 }
 function createEditedNoteElement(note) {
@@ -134,10 +138,9 @@ function createEditedNoteElement(note) {
     // content editable field
 
     let content_tableTD = document.createElement('td');
-    let content_input = document.createElement('input');
-    content_input.type = 'text';
-    content_input.value = note.description;
-    content_input.onchange = function () { note.description = content_input.value; };
+    let content_input = document.createElement('textarea'); // textarea for multiline input
+    content_input.innerText = note.description; // textarea doesn't support the "value" attribute
+    content_input.onchange = function () { note.description = content_input.innerText; };
     content_tableTD.appendChild(content_input);
     tableRow.appendChild(content_tableTD);
     // dates
@@ -152,7 +155,10 @@ function createEditedNoteElement(note) {
     buttonEdit.appendChild(buttonEditContent);
     buttonEdit.onclick = function () { render(); };
 
-    tableRow.appendChild(buttonEdit);
+
+    let buttonsTD = document.createElement('td');
+    buttonsTD.appendChild(buttonEdit);
+    tableRow.appendChild(buttonsTD);
     // TODO
     return tableRow;
 }
@@ -171,7 +177,9 @@ function createNoteTable(notes, archived = false, editedNote = null) {
         tableTH.appendChild(text);
         tableHeaderRow.appendChild(tableTH);
     }
-    tableHeaderRow.appendChild(createHeaderButtons());
+    let buttonsTD = document.createElement('td');
+    buttonsTD.appendChild(createHeaderButtons());
+    tableHeaderRow.appendChild(buttonsTD);
 
     // form its body
     let notesToDisplay = notes.filter(note => note.archived === archived);
@@ -223,8 +231,6 @@ function createStatTable(notes) {
         tableTH.appendChild(text);
         tableHeaderRow.appendChild(tableTH);
     }
-    tableHeaderRow.appendChild(createHeaderButtons());
-
     // form its body
     let categoriesToDisplay = Note.categories;
     for (const category of categoriesToDisplay) {
