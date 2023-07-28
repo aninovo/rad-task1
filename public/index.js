@@ -108,8 +108,26 @@ function createEditedNoteElement(note) {
     created_tableTD.appendChild(created_text);
     tableRow.appendChild(created_tableTD);
     // Category editable field TODO select
-
-
+    let category_tableTD = document.createElement('td');
+    let category_select = document.createElement('select');
+    const options = ['Task', 'Idea', 'Random Thought'];
+    for (const option of options) {
+        let optionElement = document.createElement('option');
+        optionElement.value = option;
+        let text = document.createTextNode(option);
+        optionElement.appendChild(text);
+        optionElement.selected = option === note.category;
+        category_select.appendChild(optionElement);
+    }
+    category_select.onchange = function () {
+        try {
+            note.category = category_select.value;
+        } catch {
+            console.log('Can\'t assign category ' + category_select.value);
+        }
+    };
+    category_tableTD.appendChild(category_select);
+    tableRow.appendChild(category_tableTD);
     // content editable field
 
     let content_tableTD = document.createElement('td');
