@@ -244,9 +244,9 @@ function createStatTable(notes) {
 
 // finding GUI elements
 
-let mainTableContainer = document.getElementById('main-table-container');
-let statTableContainer = document.getElementById('stat-table-container');
-let createNoteButton = document.getElementById('new-note-button-container');
+let mainTableContainer = document.querySelector('#main-table-container');
+let statTableContainer = document.querySelector('#stat-table-container');
+let createNoteButton = document.querySelector('#stat-table-container');
 createNoteButton.onclick = function () {
     let newNote = new Note('', 'Idea', '');
     notes.push(newNote);
