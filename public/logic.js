@@ -1,20 +1,22 @@
-class Note {
+export class Note {
     #name;
     #category;
     static categories = ['Task', 'Random Thought', 'Idea'];
     #description;
     #creationTime;
     #dates;
-    constructor(name, category, description, creationTime = null) {
+    #archived;
+    constructor(name, category, description, creationTime = null, archived = false) {
         this.name = name;
         this.description = description;
         // mark the creation time, from the arguments or automatically
         if (creationTime == null)
-            this.creationTime = Date.now();
+            this.creationTime = new Date(Date.now());
         else
             this.creationTime = creationTime;
         // check if is has a valid category
         this.category = category;
+        this.archived = archived;
     }
 
     get name() { return this.#name; }
@@ -37,6 +39,9 @@ class Note {
     }
     get dates() { return this.#dates; }
     set dates(value) { this.#dates = value; }
+
+    get archived() { return this.#archived; }
+    set archived(value) { this.#archived = value; }
 
     static #getDatesFromText(s) {
         let results = [];
