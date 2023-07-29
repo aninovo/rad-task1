@@ -13,14 +13,14 @@ function createHeaderButtons() {
     // a button that toggles showing archived notes
     let buttonViewArchived = document.createElement('button');
     buttonViewArchived.type = 'button';
-    let buttonViewArchivedContent = document.createTextNode('VA');
+    let buttonViewArchivedContent = document.createTextNode('view archived');
     buttonViewArchived.appendChild(buttonViewArchivedContent);
     buttonViewArchived.onclick = function () { viewArchived = !viewArchived; render(); };
 
     // a button that deletes all the archived/unarchived notes  (that is all that are displayed)
     let buttonDeleteAll = document.createElement('button');
     buttonDeleteAll.type = 'button';
-    let buttonDeleteAllContent = document.createTextNode('DE');
+    let buttonDeleteAllContent = document.createTextNode('delete');
     buttonDeleteAll.appendChild(buttonDeleteAllContent);
     buttonDeleteAll.onclick = function () { notes = notes.filter(note => note.archived != viewArchived); render(); };
     // finish
@@ -36,20 +36,20 @@ function createNoteButtons(note) {
     // a button that enables editing
     let buttonEdit = document.createElement('button');
     buttonEdit.type = 'button';
-    let buttonEditContent = document.createTextNode('ED');
+    let buttonEditContent = document.createTextNode('edit');
     buttonEdit.appendChild(buttonEditContent);
     buttonEdit.onclick = function () {  render(note); };
     // a button that toggles showing archived notes
     let buttonArchive = document.createElement('button');
     buttonArchive.type = 'button';
-    let buttonArchiveContent = document.createTextNode('AR');
+    let buttonArchiveContent = document.createTextNode('archive');
     buttonArchive.appendChild(buttonArchiveContent);
     buttonArchive.onclick = function () { note.archived = !note.archived; render(); };
     // a button to delete a note
 
     let buttonDelete = document.createElement('button');
     buttonDelete.type = 'button';
-    let buttonDeleteContent = document.createTextNode('DE');
+    let buttonDeleteContent = document.createTextNode('delete');
     buttonDelete.appendChild(buttonDeleteContent);
     let currentNote = note;
     buttonDelete.onclick = function () { notes = notes.filter(note => note != currentNote); render(); };
@@ -139,8 +139,10 @@ function createEditedNoteElement(note) {
 
     let content_tableTD = document.createElement('td');
     let content_input = document.createElement('textarea'); // textarea for multiline input
+
     content_input.innerText = note.description; // textarea doesn't support the "value" attribute
-    content_input.onchange = function () { note.description = content_input.innerText; };
+    content_input.rows = 6;
+    content_input.oninput = function () { note.description = content_input.value; };
     content_tableTD.appendChild(content_input);
     tableRow.appendChild(content_tableTD);
     // dates
@@ -151,7 +153,7 @@ function createEditedNoteElement(note) {
     // confirm button
     let buttonEdit = document.createElement('button');
     buttonEdit.type = 'button';
-    let buttonEditContent = document.createTextNode('ED');
+    let buttonEditContent = document.createTextNode('edit');
     buttonEdit.appendChild(buttonEditContent);
     buttonEdit.onclick = function () { render(); };
 
